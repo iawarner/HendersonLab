@@ -21,9 +21,8 @@ Date: 29May2022
 4. Administrator control of your laptop (if things need to be installed, hopefully won't need this)
 
 ## Resources
-1. Delta wiki: 
+1. Delta wiki: http://delta-wiki.imb.uq.edu.au/igc/TitleIndex
 2. The difference between powershell and windows terminal: https://www.makeuseof.com/windows-terminal-vs-powershell/
-3. 
 
 ## Part 1: Open this file 
 Congrats! You've opened this file in a text editor! 
@@ -247,3 +246,5 @@ we don't have to use the `-r` flag since we're only downloading one file, not a 
 then you should see that file when you do `ls` in the `HendersonLab` folder 
 
 from there, you can open it with your normal image viewer 
+
+**Now you're done! Congrats!**
