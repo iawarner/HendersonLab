@@ -1,6 +1,6 @@
 # Delta Workshop for Lab Retreat 2022
-### Author: Isabel Warner
-### Date: 29May2022
+Author: Isabel Warner
+Date: 29May2022
 
 ## Goals 
 1. Familiarize with terminal window & scripting programs 
