@@ -1,6 +1,6 @@
 # Delta Workshop for Lab Retreat 2022
-# Author: Isabel Warner
-# Date: 29May2022
+### Author: Isabel Warner
+### Date: 29May2022
 
 ## Goals 
 1. Familiarize with terminal window & scripting programs 
@@ -132,8 +132,9 @@ so if we say
 if you want to look at the end of the file you can use `tail` in exactly the same way 
 
 if you want to look at your script _without_ it printing in your terminal window, you can use
+`less figure_BW.py` or 
 `nano figure_BW.py`
-to open it in (effectively) another window, then use `ctrl X` to exit (and say N if you've made any changes)
+to open it in (effectively) another window, then use `ctrl X` to exit (and say N if you've made any changes in the `nano` version)
 
 have a look at some of your other files while you're here
 what do they look like? what do you notice about the different file extensions and how the files look when you view them? 
@@ -172,9 +173,77 @@ So we need to make our script with `touch testscript.pbs`
 the .pbs extension is important! it tells the system what type of file it is, and the system only reads pbs files 
 
 then we can use `nano testscript.pbs` 
-(there are different editors, but I use nano)
+(there are different text editors, but I use nano)
 
 and copy in:
 ```
+#########
+#PBS -N fig
+#PBS -q normal
+#PBS -A uqiwarne
+#PBS -S /bin/bash
+#PBS -r n
+#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l walltime=12:00:00
 
+module load python/3.8.2
+
+python /home/username/90days/figure_BW.py <file> <file> 
 ```
+and then press `ctrl x` and say `y` when asked to save 
+
+if you want to read more about what the flags mean, you can check out the delta wiki 
+the main thing you need to know is that the #PBS lines are telling the HPC what parameters to run, before it runs the rest of the script
+you're telling it 
+`-S` to expect bash language 
+`-q` to only need a normal amount of memory 
+`-N` what you want to name the output file for troubleshooting and run info 
+`-l walltime=12:00:00` how long you think the job will run (ours won't be that long, but it's fine to overestimate - underestimating may cause your job to fail)
+`-l select=:ncpus=:mem=` the number of computing processor units you'll need (not more than 1, our jobs are small), and the amount of available memory (the most I've ever done is 35G and that's more than enough for most computing) 
+
+then you'll notice we're loading a module 
+modules are loaded onto the HPC system (aka the cluster, delta2) and you can call them up to use them 
+so in our case we want a specific version of python, so we'll load it
+to see what modules are loaded you can type
+`module list`
+to see what modules are available you can type
+`module avail`
+and if you want to load a module manually you can type `module load <name of module>`
+make sure the versioning is right, usually by copying from the `module avail` information 
+
+the next part contains our script - an important part of using delta is telling it where to look to run our script 
+so we're telling it
+`python` use python (which we've loaded the right version from our module)
+`/home/username/90days/figure_BW.py` the script we want it to run and where it is 
+` ` the data we want to use, and where it is 
+` ` the output file we want, and where to put it 
+generally you don't have to do as much location specification if you're running something on your local computer, but for this system, the more specific you can be, the better 
+
+once you're done modifying your script (remember to substitute in your name for the /home/username/ portion), and your file is saved, you can submit your job to the cluster using 
+`qsub testscript.pbs` 
+and your job will be in the queue
+to see your job, check with 
+
+`qstat -1n` to check _all_ the jobs running on delta (you should see everyone else, not just you)
+`qstat -u yourusername -1n` to see all your jobs 
+
+then once it's done you should be able to type `ls` in your directory and see your output files
+the `.o` file will tell you what the parameters of the run were
+and the `.e` file will tell you about any errors (of the job, not your script, so if your script is broken, it won't help you fix it)
+and you should have the output files from the script with the right extensions (in our case, an image file)
+
+## Downloading our data
+You shouldn't keep data on delta2 very long if you can help it 
+It's the same as CLIMB - it will run out of space 
+
+So to download, you do the reverse of what we did to upload (and you don't have to download everything, just your output file)
+
+Exit from delta2 using `exit` and you should be back in the directory where you uploaded to delta2, on your local/home machine 
+
+Then you can run
+`scp username@delta2.imb.uq.edu.au:/home/username/90days/<whatever this file is> /Users/username/wherever/you/put/HendersonLab/`
+we don't have to use the `-r` flag since we're only downloading one file, not a whole folder
+
+then you should see that file when you do `ls` in the `HendersonLab` folder 
+
+from there, you can open it with your normal image viewer 
